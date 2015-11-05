@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="trashedDirectory-grid" editable="false" title="Trashed Directories" model="com.axelor.apps.googleapps.db.GoogleDirectory">
+		<toolbar>
+			<button name="new" title="New" hidden="true"/>
+			<button name="save" title="Save" hidden="true"/>
+			<button name="edit" title="Edit" hidden="true"/>
+			<button name="delete" title="Delete" hidden="true"/>			
+			<button name="restore" title="Restore" prompt="It will Restore selected directory(s) back, Are You Sure ?" 
+				onClick="action-trasheddirectory-method-restore-directories-from-grid"/>	
+			<button name="deleteForever" title="Delete Forever" prompt="It will remove selected directory(s) permanently, Are You Sure ?" 
+				onClick="action-trasheddirectory-method-delete-from-trash"/>					
+		</toolbar>
+		<field name="directoryName" title="Directory Name"/>
+		<field name="parentGoogleDirectory" title="Parent Directory"/>
+		<field name="googleFilesList" title="Files"/>		
+	</grid>
+	
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-trasheddirectory-method-restore-directories-from-grid">
+		<call class="com.axelor.googleapps.directory.DirectoryController" method="restoreDirectoriesFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-trasheddirectory-method-delete-from-trash">
+		<call class="com.axelor.googleapps.directory.DirectoryController" method="deleteFromTrash"/>
+	</action-method>
+	
+</object-views>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+	
+	<grid name="prestashop-address-grid" title="Address list" model="com.axelor.apps.base.db.Address">
+		<field name="prestashopid" />
+		<field name="fullName" />
+		<field name="postcode" />
+		<field name="phoneMobile" />
+	</grid>
+	
+	<form name="prestashop-address-form" title="Address" model="com.axelor.apps.base.db.Address"
+		cols="2" colWidths="*,200">
+		<group name="main" title="Address details" cols="1" colSpan="1">
+			<group colSpan="4" cols="2" colWidths="25%,*">
+				<field name="addressL2" />
+				<field name="addressL3" />
+				<field name="addressL4" />
+				<field name="addressL5" />
+				<field name="addressL6" required="true" />
+				
+				<field name="postcode"></field>
+				<field name="region" title="State" />
+				<field name="phoneMobile" title="Mobile" />
+				
+				<field name="addressL7Country" required="true" />
+			</group>
+		</group>
+	</form>
+	
+	
+	
+</object-views>

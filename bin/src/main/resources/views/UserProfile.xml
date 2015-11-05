@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="userProfile-grid" editable="false" title="User Profile" 
+		model="com.axelor.apps.googleapps.db.UserProfile">
+		<toolbar>
+			<button name="delete" title="Delete" hidden="true"/>
+		</toolbar>
+		<field name="driveUserInfo" title="User"/>
+		<field name="emailId" title="Email Id"/>
+		<field name="name" title="Name"/>
+	</grid>
+
+	<form name="userProfile-form" title="User Profile" cols="2" 
+		onLoad="action-userprofile-attrs-disable-for-others,action-userprofile-method-check-user-profile-existance"
+		colWidths="*,400" model="com.axelor.apps.googleapps.db.UserProfile">
+		<group title="User Profile" cols="2">
+			<field name="driveUserInfo" title="User" required="true" onChange="action-userprofile-method-check-user-profile-existance,action-userprofile-attrs-disable-for-others"/><break/>
+			<field name="emailId" title="Email Id" required="true"/>
+			<field name="name" title="Name" required="true"/>
+		</group>
+		<group title="Instructions">
+			<label title="Enter the email Address of Google Account in which you are "/><break/>
+			<label title="going to authorize for using Gooogle Drive Service through Google Apps"/><break/>
+		</group>
+	</form>
+
+	<action-attrs name="action-userprofile-attrs-disable-for-others">
+		<attribute name="readonly" for="emailId" expr="true" if="driveUserInfo != null &amp;&amp; driveUserInfo.internalUser != __user__"/>
+		<attribute name="readonly" for="name" expr="true" if="driveUserInfo != null &amp;&amp; driveUserInfo.internalUser != __user__"/>
+		<attribute name="readonly" for="emailId" expr="false" if="driveUserInfo != null &amp;&amp; driveUserInfo.internalUser == __user__ || id==null"/>
+		<attribute name="readonly" for="name" expr="false" if="driveUserInfo != null &amp;&amp; driveUserInfo.internalUser == __user__ || id==null"/>
+	</action-attrs>
+
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-userprofile-method-check-user-profile-existance">
+		<call class="com.axelor.googleapps.userprofile.UserProfileController" method="checkUserProfileExistance"/>
+	</action-method>
+	
+</object-views>

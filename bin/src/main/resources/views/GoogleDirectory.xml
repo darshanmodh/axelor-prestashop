@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="googledirectory-grid" title="Google Directories" model="com.axelor.apps.googleapps.db.GoogleDirectory" editable="false">
+		<toolbar>
+			<button name="trash" title="Move To Trash" prompt="It will trash directory(s) with whole hierarchy, Are You Sure ?"
+			 	onClick="action-googledirectory-method-trash-directories-from-grid"/>
+			<button name="deleteDirectory" title="Delete" prompt="It will remove directory(s) permanently with whole hierarchy, Are You Sure ?" 
+			 	onClick="action-googledirectory-method-remove-directories"/>
+			<button name="delete" hidden="true" title="Delete"/>
+			<button name="syncdrive" title="Sync" prompt=" &lt;img src='http://s10.postimg.org/iggyctyed/synchronize.png ' width='20px' &gt; &lt;/img&gt; It will Synchronize with Google Drive, Are You Sure ?"
+				onClick="action-googledirectory-method-sychronization"/>
+		</toolbar>
+		<field name="directoryName" title="Directory Name"/>
+		<field name="parentGoogleDirectory" title="Parent Directory"/>
+		<field name="googleFilesList" title="Directory files">
+			<grid title="Google Files" editable="true">
+				<field name="fileName" title="File Name"/>
+				<field name="filePermissionsList" title="Shared To">
+					<grid title="Shared To">					
+						<field name="sharingUser">						
+							<grid title="User">
+								<field name="name" title="Name"/>	
+							</grid>						
+						</field>
+					</grid>
+				</field>
+			</grid>
+		</field>
+	</grid>
+	
+	<form name="googledirectory-form" title="Google Directory" model="com.axelor.apps.googleapps.db.GoogleDirectory" cols="2" colWidths="*,400" 
+			onNew="action-googledirectory-record-current-user-of-directory-creator,action-googledirectory-attrs-show-hide-files,action-googledirectory-attrs-show-dir-options" onLoad="action-googledirectory-attrs-show-hide-files,action-googledirectory-attrs-hide-dir-options"
+			onSave="action-googledirectory-method-save-directory,action-showFiles">
+		<group title="Google Drive Directory">
+			<group title="Directory Details">
+				<field name="directoryName" title="Directory Name"/><break/>
+				<field name="useRoot" title="Create Directory In Root" widget="[type=BOOLEAN]" onChange="action-googledirectory-attrs-parentShow"/><break/>
+				<field name="driveUserInfo" title="Drive User" hidden="true"/>
+				<field name="parentGoogleDirectory" domain="self.driveUserInfo=:driveUserInfo" title="Parent Directory" required="true"/>
+			</group>
+			<break/><break/>
+		</group>
+		<break/><break/>
+		<field name="googleFilesList" hidden="true" title="Directory Files" domain="self.driveUserInfo= :driveUserInfo"
+			onChange="action-googledirectory-method-save-document-in-directory,save" form-view="document-form">
+			<grid title="Google Files">				
+				<field name="fileName" title="File Name"/>
+				<field name="fileSize" title="File Size"/>
+				<field name="lastModified" title="Last Modified"/>
+			</grid>						
+		</field>		
+	</form>
+
+    <action-record name="action-googledirectory-record-current-user-of-directory-creator" model="com.axelor.apps.googleapps.db.GoogleFile">
+		<field name="driveUserInfo" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()"/>
+	</action-record>
+
+	<action-attrs name="action-googledirectory-attrs-parentShow">
+		<attribute name="hidden" for="parentGoogleDirectory" expr="eval: useRoot" />
+		<attribute name="required" for="parentGoogleDirectory" expr="eval: !useRoot" />	
+	</action-attrs>
+
+	<action-attrs name="action-googledirectory-attrs-show-hide-files">
+		<attribute name="hidden" for="googleFilesList" expr="eval: directoryId == null"/>
+		<attribute name="hidden" for="useRoot" expr="eval: directoryId != null"/>
+	</action-attrs>
+
+	<action-attrs name="action-googledirectory-attrs-hide-dir-options">
+		<attribute name="hidden" for="useRoot" expr="true"/>
+		<attribute name="hidden" for="parentGoogleDirectory" expr="true"/>
+	</action-attrs>	
+
+	<action-attrs name="action-googledirectory-attrs-show-dir-options">
+		<attribute name="hidden" for="useRoot" expr="false"/>
+		<attribute name="hidden" for="parentGoogleDirectory" expr="false"/>
+	</action-attrs>	
+
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-googledirectory-method-trash-directories-from-grid">
+		<call class="com.axelor.googleapps.directory.DirectoryController" method="trashDirectoriesFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-googledirectory-method-remove-directories">
+		<call class="com.axelor.googleapps.directory.DirectoryController" method="removeDirectories"/>
+	</action-method>
+	
+	<action-method name="action-googledirectory-method-sychronization">
+		<call class="com.axelor.googleapps.syncDrive.SynchronizeGoogleDriveController" method="sychronization"/>
+	</action-method>
+	
+	<action-method name="action-googledirectory-method-save-directory">
+		<call class="com.axelor.googleapps.directory.DirectoryController" method="saveDirectory"/>
+	</action-method>
+	
+	<action-method name="action-googledirectory-method-save-document-in-directory">
+		<call class="com.axelor.googleapps.document.DocumentController" method="saveDocumentInDirectory"/>
+	</action-method>
+	
+</object-views>

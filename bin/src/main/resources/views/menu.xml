@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+
+	<!-- Axelor - GoogleApps module menu views -->
+
+	<menuitem name="menu-googleAppsMenu-all" title="Google Apps"
+		icon="img/axelor-googleapps/googleDrive.png" groups="admins,erp" />
+
+	<menuitem name="menu-googledocument" title="Document"
+		parent="menu-googleAppsMenu-all" action="googledocument.all"
+		icon="img/axelor-googleapps/docs.png" />
+
+	<action-view name="googledocument.all" title="Google Document "
+		model="com.axelor.apps.googleapps.db.GoogleFile">
+		<view type="grid" name="document-grid" />
+		<view type="form" name="document-form" />
+		<domain>self.driveUserInfo=:drive_user_doc and (self.fileType=:file_type_doc or self.fileType=:file_type_odt or self.fileType=:file_type_txt or self.fileType=:file_type_pdf or self.fileType=:file_type_csv or self.fileType=:file_google_ppt or self.fileType=:file_google_doc) and self.trashed=:not_trashed and self.sharedWithMe=:not_sharedWithMe </domain>
+		<context name="drive_user_doc" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+		<context name="not_trashed" expr="false" />
+		<context name="file_type_doc" expr="application/msword" />
+		<context name="file_type_odt" expr="application/vnd.oasis.opendocument.text" />
+		<context name="file_type_txt" expr="text/plain" />
+		<context name="file_type_pdf" expr="application/pdf" />
+		<context name="file_type_csv" expr="text/csv" />
+		<context name="file_google_ppt" expr="application/vnd.google-apps.presentation" />
+		<context name="file_google_doc" expr="application/vnd.google-apps.document" />
+		<context name="not_sharedWithMe" expr="false" />
+	</action-view>
+	
+	<menuitem name="menu-googlespreadsheet" title="SpreadSheet"
+		parent="menu-googleAppsMenu-all" action="googlespreadsheet.all"
+		icon="img/axelor-googleapps/spreadsheet.png" />
+		
+	<action-view name="googlespreadsheet.all" title="Google SpreadSheet "
+		model="com.axelor.apps.googleapps.db.GoogleFile">
+		<view type="grid" name="spreadsheet-grid" />
+		<view type="form" name="spreadsheet-form" />
+		<domain>self.driveUserInfo=:drive_user and (self.fileType=:file_xls or self.fileType=:file_ods or self.fileType=:file_google_spreadSheet) and self.trashed=false and self.sharedWithMe=:not_sharedWithMe</domain>
+		<context name="drive_user" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+		<context name="file_xls" expr="application/vnd.ms-excel" />
+		<context name="file_ods" expr="application/vnd.oasis.opendocument.spreadsheet" />
+		<context name="file_google_spreadSheet" expr="application/vnd.google-apps.spreadsheet" />
+		<context name="not_sharedWithMe" expr="false" />
+	</action-view>
+
+	<menuitem name="menu-googlefileSharedWithMe" title="Shared With Me"
+		parent="menu-googleAppsMenu-all" action="googleFileSharedWithme.all"
+		icon="img/axelor-googleapps/share.png" />
+		
+	<action-view name="googleFileSharedWithme.all" title="Google File Shared With Me"
+		model="com.axelor.apps.googleapps.db.GoogleFile">
+		<view type="grid" name="googleFileSharedWithMe-grid" />
+		<view type="form" name="googleFileSharedWithMe-form" />
+		<domain>self.sharedWithMe=:sharedWithMeFile AND self.trashed=:not_trashed AND self.driveUserInfo=:user_share </domain>
+		<context name="sharedWithMeFile" expr="true" />
+		<context name="not_trashed" expr="false" />
+		<context name="user_share" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-view>
+
+	<menuitem name="menu-googledirectory" title="Directories"
+		parent="menu-googleAppsMenu-all" action="googledirectory.all"
+		icon="img/axelor-googleapps/directories.png" />
+		
+	<action-view name="googledirectory.all" title="Google Directory "
+		model="com.axelor.apps.googleapps.db.GoogleDirectory">
+		<view type="grid" name="googledirectory-grid" />
+		<view type="form" name="googledirectory-form" />
+		<domain>self.driveUserInfo=:drive_user_dir AND self.trashed=:not_trashed</domain>
+		<context name="drive_user_dir" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+		<context name="not_trashed" expr="false" />
+	</action-view>
+
+	<menuitem name="menu-createTemplate" title="Document Templates"
+		parent="menu-googleAppsMenu-all" action="documentTemplates.open"
+		icon="img/axelor-googleapps/template.png" />
+		
+	<action-view name="documentTemplates.open" title="Document Template"
+		model="com.axelor.apps.googleapps.db.TemplateFile">
+		<view type="grid" name="templateFile-grid" />
+		<view type="form" name="templateFile-form" />
+		<domain> self.googleFile.driveUserInfo=:drive_user or self.share=:allow </domain>
+		<context name="drive_user" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+		<context name="allow" expr="true" />
+	</action-view>
+
+	<!-- <menuitem name="menu-uploadFile" title="Upload File" parent="menu-googleAppsMenu-all" 
+		action="uploadFile.open" icon="img/axelor-googleapps/upload.png" /> <action-view 
+		name="uploadFile.open" title="Upload File" model="com.axelor.apps.googleapps.db.GoogleFile"> 
+		<view type="form" name="uploadFile-form" /> </action-view> -->
+	<menuitem name="menu-trashedDirectory" title="Trashed Directories"
+		parent="menu-googleAppsMenu-all" action="trashedDirectory.open"
+		icon="img/axelor-googleapps/trash.png" />
+		
+	<action-view name="trashedDirectory.open" title="Trashed Directories"
+		model="com.axelor.apps.googleapps.db.GoogleDirectory">
+		<view type="grid" name="trashedDirectory-grid" />
+		<domain> self.trashed=:dir_trashed and self.driveUserInfo=:user_owner</domain>
+		<context name="dir_trashed" expr="true" />
+		<context name="user_owner" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-view>
+
+	<menuitem name="menu-trashedFile" title="Trashed Files"
+		parent="menu-googleAppsMenu-all" action="trashedFile.open"
+		icon="img/axelor-googleapps/trash.png" />
+		
+	<action-view name="trashedFile.open" title="Trashed Files"
+		model="com.axelor.apps.googleapps.db.GoogleFile">
+		<view type="grid" name="trashedFile-grid" />
+		<domain> self.trashed=:file_trashed and self.driveUserInfo=:user_owner</domain>
+		<context name="file_trashed" expr="true" />
+		<context name="user_owner" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-view>
+
+	<!-- Google Apps Configuration Settings Menu -->
+	<menuitem name="menu-googleAppsconfig-all" title="Settings"
+		icon="img/axelor-googleapps/settings.png" parent="menu-googleAppsMenu-all" />
+
+	<menuitem name="menu-googleappsconfig" title="Configuration"
+		groups="admins,erp" parent="menu-googleAppsconfig-all" action="googleappsconfig.all"
+		icon="img/axelor-googleapps/googleappsconfig.png" />
+		
+	<action-view name="googleappsconfig.all" title="Google Apps Configuration"
+		model="com.axelor.apps.googleapps.db.GoogleAppsConfig">
+<!-- 		<view type="grid" name="googleappsconfig-grid" /> -->
+		<view type="form" name="googleappsconfig-form" />
+	</action-view>
+	<!-- 
+	<menuitem name="menu-googleappsauthorize" title="Authorize"
+		parent="menu-googleAppsconfig-all" action="googleappsauthorize.open"
+		icon="img/axelor-googleapps/authorize.png" />
+		
+	<action-view name="googleappsauthorize.open" title="Google Apps Authorize"
+		model="com.axelor.apps.googleapps.db.AppsCredentials">
+		<view type="form" name="googleappsauthorize-form" />
+	</action-view>
+	 -->
+	<menuitem name="menu-userProfile" title="User Profile"
+		parent="menu-googleAppsconfig-all" action="userProfile.open"
+		icon="img/axelor-googleapps/userprofile.png" />
+		
+	<action-view name="userProfile.open" title="User Profile"
+		model="com.axelor.apps.googleapps.db.UserProfile">
+		<view type="grid" name="userProfile-grid" />
+		<view type="form" name="userProfile-form" />
+	</action-view>
+
+	<menuitem name="menu-templateSpreadSheet" title="Template SpreadSheet"
+		parent="menu-googleAppsconfig-all" action="templateSpreadSheet.open"
+		icon="img/axelor-googleapps/spreadsheetTemplate.png" />
+		
+	<action-view name="templateSpreadSheet.open" title="Template SpreadSheet"
+		model="com.axelor.apps.googleapps.db.TemplateSpreadSheet">
+		<view type="grid" name="templateSpreadSheet-grid" />
+		<view type="form" name="templateSpreadSheet-form" />
+		<domain>self.creator=:drive_user or self.share=:allow</domain>
+		<context name="drive_user" expr="eval:__user__" />
+		<context name="allow" expr="true" />
+	</action-view>
+	
+	<menuitem name="menu-googleappsSyncSettings" title="Sync Settings"
+		parent="menu-googleAppsconfig-all" action="syncSettings.open"
+		icon="img/axelor-googleapps/synchronize.png" />
+		
+	<action-view name="syncSettings.open" title="Sync Settings"
+		model="com.axelor.apps.googleapps.db.GoogleAppsSyncSettings">
+		<view type="grid" name="googleapps-sync-settings-grid" />
+		<view type="form" name="googleapps-sync-settings-form" />
+		<domain>self.driveUserInfo=:drive_user</domain>
+		<context name="drive_user" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-view>
+
+</object-views>

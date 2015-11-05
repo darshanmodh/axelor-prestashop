@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+	
+	<form name="googleappsconfig-form" title="Google Apps Configuration" cols="2" colWidths="*,300"
+		onNew="action-googleappsconfig-action-group" onLoad="action-googleappsconfig-attrs-showhide-authimage,action-googleappsconfig-attrs-showhide-authbuttons"
+		model="com.axelor.apps.googleapps.db.GoogleAppsConfig">
+		<toolbar>
+			<button name="openApps" title="Open Apps"
+				onClick="action-googleappsconfig-method-authorize-application"/>
+			<button name="unauthorize" title="Unauthorize" prompt="It will remove all your data and deactivate your Google-Apps service, Are You Sure ?"
+				onClick="action-googleappsconfig-method-unauthorize-user,action-googleappsconfig-action-group"/>
+		</toolbar>
+		<group title="User Status" colSpan="2">
+			<label name="authImage"/>
+		</group>
+		<break/>
+		<group title="Google Apps Authorization -- " canCollapse="true" colSpan="2">
+			<group title="User" canCollapse="true">
+				<field name="driveUserInfo" title="Drive user" readonly="true"/><break/>
+				<field name="lastAccessTime" title="Last access Time" readonly="true"/><break/>
+				<break/>
+				<break/>
+			</group>
+			<group title="Instructions" canCollapse="true">
+				<label title=" To authorize your Google Drive Account with Google Apps  "/><break/>
+				<label title=" There is Simply two steps for Authorizing your Google Drive Account : "/><break/>
+				<label title="1. Click on open Google Apps and it will give you a link in message, just follow it. "/><break/>
+				<label title="2. If you are not logged into your google account you will be asked for that,"/><break/>
+				<label title=" else on that page you allow google apps to access the drive service, by clicking allow access button"/><break/>
+			</group>
+		</group>
+		<group title="Google Apps Configuration Details" cols="2">
+			<group title="Instruction" colSpan="2">
+				<label title="This view contain details related to the Google Drive API Credentials and Keys, So there should be only one unique record of Google API Key "/>
+			</group>
+			<group title="Configuration" colSpan="2">
+				<field name="clientEmail" title="Client Email Address"/>
+				<field name="clientId" title="Client ID"/>
+				<field name="clientSecret" title="Client Secret"/>
+				<field name="redirectURI" title="Redirect URI"/>
+			</group>
+		</group>
+		
+	</form>
+	
+	<action-attrs name="action-googleappsconfig-attrs-showhide-authbuttons">
+		<attribute name="hidden" for="unauthorize" expr="eval: refreshToken == null" />
+		<attribute name="hidden" for="openApps" expr="eval: refreshToken != null" />
+	</action-attrs>
+	
+	<action-attrs name="action-googleappsconfig-attrs-showhide-authimage">
+		<attribute name="title" for="authImage" expr=" &lt;img src='img/axelor-googleapps/unauthorized.png' width='20px' &gt;&lt;/img&gt; Inactive Account" if=" refreshToken == null" />
+		<attribute name="title" for="authImage" expr=" &lt;img src='img/axelor-googleapps/authorized.png' width='20px' &gt;&lt;/img&gt; Active Account " if=" refreshToken != null"/>
+	</action-attrs>
+	
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-googleappsconfig-method-googleappsconfig-on-new">
+		<call class="com.axelor.googleapps.googleappsconfig.GoogleAppsConfigController" method="onNewGoogleAppsConfig"/>
+	</action-method>
+	
+	<action-method name="action-googleappsconfig-method-check-user-status">
+		<call class="com.axelor.googleapps.authorize.AuthorizationController" method="checkUserStatus"/>
+	</action-method>
+	
+	<action-method name="action-googleappsconfig-method-check-user-existance">
+		<call class="com.axelor.googleapps.authorize.AuthorizationController" method="checkUserExistance"/>
+	</action-method>
+	
+	<action-method name="action-googleappsconfig-method-authorize-application">
+		<call class="com.axelor.googleapps.authorize.AuthorizationController" method="openGoogleApps"/>
+	</action-method>
+	
+	<action-method name="action-googleappsconfig-method-unauthorize-user">
+		<call class="com.axelor.googleapps.authorize.AuthorizationController" method="unauthorizeUser"/>
+	</action-method>
+	
+	<action-group name="action-googleappsconfig-action-group">
+		<action name="action-googleappsconfig-method-googleappsconfig-on-new"/>
+		<action name="action-googleappsconfig-method-check-user-status"/>
+		<action name="action-googleappsconfig-method-check-user-existance"/>
+		<action name="action-googleappsconfig-attrs-showhide-authimage"/>
+		<action name="action-googleappsconfig-attrs-showhide-authbuttons"/>
+	</action-group>
+	
+</object-views>

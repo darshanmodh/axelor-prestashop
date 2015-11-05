@@ -1,0 +1,77 @@
+
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<chart name="chart.prestashop.order.by.customer" title="No. of Orders placed by Customer">
+		<dataset type="sql">
+		    <![CDATA[
+		    SELECT
+    			COUNT(salesOrder.id)        AS     _total_orders,
+    			customer.full_name         AS     _full_name
+			FROM
+     			 supplychain_sales_order as salesOrder,
+    			 base_partner as customer
+			WHERE
+     			 customer.id = salesOrder.client_partner
+     			 AND salesOrder.creation_date >= current_timestamp - INTERVAL '15 days'
+			GROUP BY
+         		 _full_name
+			ORDER BY
+       			 _full_name
+			  ]]>
+	    </dataset>
+		<category key="_full_name" type="text" />
+		<series key="_total_orders" type="pie" />
+	</chart>
+	<chart name="chart.prestashop.sales.of.last.week" title="Sales of Last 7 days">
+		<dataset type="sql">
+		    <![CDATA[
+			SELECT
+				 to_char(salesOrder.creation_date,'Day') _day,
+      			 sum(salesOrder.ex_tax_total) _total_amount
+			FROM
+   				 supplychain_sales_order as salesOrder
+			WHERE
+    			 salesOrder.creation_date >= current_timestamp - INTERVAL '7 days'
+			GROUP BY 
+				 _day	
+    		ORDER BY
+       			 _day
+			  ]]>
+	    </dataset>
+		<category key="_day" type="text" />
+		<series key="_total_amount" type="bar" />
+	</chart>
+
+
+</object-views>
+	
+<!-- <?xml version="1.0" encoding="UTF-8" standalone="yes"?> -->
+<!-- <object-views xmlns="http://apps.axelor.com/xml/ns/object-views" -->
+<!-- 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
+<!-- 	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd"> -->
+
+<!-- 	<chart name="chart.prestashop.order.by.customer" title="Customer Orders"> -->
+<!-- 		<dataset type="sql"> -->
+<!-- 		    <![CDATA[ -->
+<!-- 		    SELECT -->
+<!--     			COUNT(salesOrder.id)        AS     _total_orders, -->
+<!--     			customer.full_name         AS     _full_name -->
+<!-- 			FROM -->
+<!--      			 supplychain_sales_order as salesOrder, -->
+<!--     			 base_partner as customer -->
+<!-- 			WHERE -->
+<!--      			 customer.id = salesOrder.client_partner -->
+<!-- 			GROUP BY -->
+<!--          		 _full_name -->
+<!-- 			ORDER BY -->
+<!--        			 _full_name -->
+<!-- 			  ]]> -->
+<!-- 	    </dataset> -->
+<!-- 		<category key="_full_name" type="text" /> -->
+<!-- 		<series key="_total_orders" type="bar" /> -->
+<!-- 	</chart> -->
+<!-- </object-views> -->

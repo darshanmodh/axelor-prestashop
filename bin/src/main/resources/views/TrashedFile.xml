@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid  name="trashedFile-grid" editable="false" title="Trashed Files" model="com.axelor.apps.googleapps.db.GoogleFile" >
+		<toolbar>
+			<button name="new" title="New" hidden="true"/>
+			<button name="save" title="Save" hidden="true"/>
+			<button name="edit" title="Edit" hidden="true"/>
+			<button name="delete" title="Delete" hidden="true"/>			
+			<button name="restore" title="Restore" prompt="It will Restore selected file(s) back, Are You Sure ?" 
+				onClick="action-trashedfile-method-restore-documents-from-grid"/>	
+			<button name="deletefromtrash" title="Delete Forever" prompt="It will remove selected file(s) permanently, Are You Sure ?"  
+				onClick="action-trashedfile-method-delete-trashed-file"/>
+		</toolbar>
+		<field name="fileName"/>
+		<field name="fileType"/>
+		<field name="fileSize"/>
+		<field name="googleDirectory"/>
+	</grid>
+	
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-trashedfile-method-restore-documents-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="restoreDocumentsFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-trashedfile-method-delete-trashed-file">
+		<call class="com.axelor.googleapps.document.DocumentController" method="deleteTrashedFile"/>
+	</action-method>
+	
+</object-views>

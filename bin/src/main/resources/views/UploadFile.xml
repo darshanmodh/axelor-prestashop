@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<form colWidths="*,200" cols="2" title="Upload File" name="uploadFile-form" onNew="action-uploadfile-record-in-current-user-directory" model="com.axelor.apps.googleapps.db.GoogleFile">
+		<group title="Upload file">
+			<field name="driveUserInfo" hidden="true"/>
+			<field name="fileToUpload" title="File To Upload" widget="MasterDetail[type=MANY_TO_ONE|target=com.axelor.meta.db.MetaFile]" required="true"/> 
+<!--					<field name="fileName" title="File Name" />  -->
+			<field name="googleDirectory" title="Parent Directory" domain="self.driveUserInfo=:driveUserInfo"/>
+			<button name="upload" title="Upload" onClick="action-uploadfile-method-upload-file"/>
+		</group>
+	</form>
+	
+	<action-record name="action-uploadfile-record-in-current-user-directory" model="com.axelor.apps.googleapps.db.GoogleFile">
+		<field name="driveUserInfo" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()"/>
+	</action-record>
+	
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-uploadfile-method-upload-file">
+		<call class="com.axelor.googleapps.uploadFile.UploadFileController" method="uploadFile"/>
+	</action-method>
+	
+</object-views>

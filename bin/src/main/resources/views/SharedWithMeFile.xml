@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="googleFileSharedWithMe-grid" title="Documents" model="com.axelor.apps.googleapps.db.GoogleFile" editable="false">
+		<toolbar>
+			<button name="refresh" title="Refresh"/>
+			<button name="new" title="New" hidden="true"/>
+			<button name="search" title="Search"/>
+			<button name="delete" title="Delete" hidden="true"/>
+			<button name="downloadFile" title="Download" help="select the file to download and then click here"
+				onClick="action-sharedwithmefile-method-download-file-from-grid"/>
+			<button name="deleteFiles" title="Delete" prompt="It will remove selected file(s) permanently, Are You Sure ?" 
+				onClick="action-sharedwithmefile-method-delete-files-from-grid"/>
+		</toolbar>
+		<field name="fileName" title="File Name"></field>
+		<field name="fileSize" title="File Size"></field>
+		<field name="lastModified" title="Last Modified"></field>
+		<field name="sharedBy" title="Shared By"></field>
+	</grid>
+
+	<selection name="sharedWithMeFileTypeSelection">
+		<option value="application/vnd.google-apps.document">Google Document</option>
+		<option value="text/plain">.txt</option>
+		<option value="application/vnd.oasis.opendocument.text">.odt</option>
+		<option value="application/msword">.docx</option>
+		<option value="application/pdf">.pdf</option>
+		<option value="text/csv">.csv</option>
+		<option value="application/vnd.google-apps.spreadsheet">Google Spreadsheet</option>
+		<option value="application/vnd.google-apps.presentation">Google Presentation</option>
+	</selection>
+
+	<form colWidths="*,300,300" cols="3" title="Google Document"
+		name="googleFileSharedWithMe-form" model="com.axelor.apps.googleapps.db.GoogleFile"
+		onNew="action-document-attrs-enable-fill-type-on-new,action-document-record-current-user-for-directory,action-sharedwithmefile-method-check-root-existance"
+		onSave="action-sharedwithmefile-method-update-shared-file"
+		onLoad="action-document-attrs-disable-fill-type-on-load,action-sharedwithmefile-attrs-disable-filepermission-on-readable-file,action-sharedwithmefile-attrs-hide-content-for-readonly,action-sharedwithmefile-method-check-sharing-list">
+			<toolbar>
+				<button name="new" title="New" hidden="true"/>
+				<button title="Cancel" name="cancel"/>
+				<button hidden="true" title="Copy" name="copy"/>
+				<button hidden="true" title="Refresh" name="refresh"/>
+				<button title="Search" name="search"/>
+				<button name="downloadFile" title="Download"
+					onClick="action-sharedwithmefile-method-download-file"/>
+				<button name="openDocumentinDrive" title="Open"
+					onClick="action-sharedwithmefile-method-read-document-in-drive"/>
+			</toolbar>
+			<group colSpan="2" cols="2" help="this section is required to select a file with which you want to make perform operation"
+				title="Google Document">
+				<field name="driveUserInfo" hidden="true"/>
+				<break/>
+				<group canCollapse="true" colSpan="2" title="Document File Details">
+					<field title="File Name" name="fileName" required="true"/>
+					<field name="fileType" selection="sharedWithMeFileTypeSelection" required="true"/>
+				</group>
+				<break/>
+				<group colSpan="2" cols="2" title="Document Editor" hidden="true">
+					<break/>
+					<field colSpan="2" title="Document Content" name="fileContent"/>
+					<break/>
+				</group>
+				<break/>
+				<group title="Shared By">
+					<field name="sharedBy" title="Shared By" readonly="true"/>
+				</group>
+				<group title="Permission" colSpan="2">
+					<field name="writable" title="Can Modify"/>
+				</group>
+				<break/>
+				<field name="filePermissionsList"/>
+			</group>
+			<group title="Actions" canCollapse="true">
+				<button name="exportDocumentPdf" title="Export Pdf" onClick="action-sharedwithmefile-method-export-in-pdf"/>
+			</group>
+		<break/>
+	</form>
+
+	<action-attrs name="action-sharedwithmefile-attrs-disable-filepermission-on-readable-file">
+		<attribute name="hidden" for="filePermissionsList" expr="true" if="eval: !writable" />
+		<attribute name="hidden" for="filePermissionsList" expr="false" if="eval: writable" />
+	</action-attrs>
+
+	<action-attrs name="action-sharedwithmefile-attrs-hide-content-for-readonly">
+		<attribute name="readonly" for="fileContent" expr="true" if="eval: !writable" />
+		<attribute name="readonly" for="fileContent" expr="false" if="eval: writable" />
+	</action-attrs>
+
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-sharedwithmefile-method-download-file-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="downloadFileFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-delete-files-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="deleteFilesFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-check-root-existance">
+		<call class="com.axelor.googleapps.document.DocumentController" method="onNewCheckRootExistance"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-update-shared-file">
+		<call class="com.axelor.googleapps.sharedwithme.SharedWithMeController" method="updateSharedWithmeFile"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-check-sharing-list">
+		<call class="com.axelor.googleapps.sharedwithme.SharedWithMeController" method="checkSharingList"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-download-file">
+		<call class="com.axelor.googleapps.document.DocumentController" method="downloadFile"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-read-document-in-drive">
+		<call class="com.axelor.googleapps.document.DocumentController" method="readDocumentInDrive"/>
+	</action-method>
+	
+	<action-method name="action-sharedwithmefile-method-export-in-pdf">
+		<call class="com.axelor.googleapps.document.DocumentController" method="exportFileInPdf"/>
+	</action-method>
+	
+</object-views>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<portal title="Prestashop Chart" name="prestashop-chart-portal"
+		cols="2">
+		<portlet action="portal.prestashop.order.by.customer" height="700" width="700" />
+		<portlet action="portal.prestashop.sales.of.last.week" height="700" />
+		<portlet action="portal.prestashop.recent.customers" height="700" width="700" colSpan="1" canSearch="true"/>
+<!-- 		<portlet action="portal.prestashop.customers.by.country" height="500" colSpan="1" canSearch="true"/> -->
+	</portal>
+
+	<action-view name="portal.prestashop.order.by.customer" model="com.axelor.apps.supplychain.db.SalesOrder"
+		title="Leads by Source">
+		<view type="chart" name="chart.prestashop.order.by.customer" />	
+	</action-view>
+	<action-view name="portal.prestashop.sales.of.last.week" title="Weekly Sales">
+		<view type="chart" name="chart.prestashop.sales.of.last.week" />
+	</action-view>
+	<action-view name="portal.prestashop.recent.customers" title="Recently created Customers" model="com.axelor.apps.base.db.Partner" >
+    	<view type="grid" name="prestashop-customer-grid"/>
+    	<view type="form" name="prestashop-customer-form"/>
+    	<domain>self.createdOn >= date(now())-15</domain>
+	</action-view>
+<!-- 	<action-view name="portal.prestashop.customers.by.country" title="Customers by country" model="com.axelor.apps.base.db.Partner"> -->
+<!-- 		<view type="chart" name="chart.customers.by.country.bar"/> -->
+<!-- 	</action-view> -->
+</object-views>
+<!-- <?xml version="1.0" encoding="UTF-8" standalone="yes"?> -->
+<!-- <object-views xmlns="http://apps.axelor.com/xml/ns/object-views" -->
+<!--   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" -->
+<!--   xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd"> -->
+  
+<!-- <portal title="Prestashop Chart" name="prestashop-chart-portal" cols="2"> -->
+<!-- 	<portlet action="portal.prestashop.order.by.customer" height="350" /> -->
+<!-- </portal> -->
+
+<!-- <action-view name="portal.prestashop.order.by.customer" title="Leads by Source"> -->
+<!-- 	<view type="chart" name="chart.prestashop.order.by.customer" /> -->
+<!-- </action-view> -->
+
+<!-- </object-views> -->
+
+	

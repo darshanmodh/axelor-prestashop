@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid title="Configuration" name="prestashop-configuration-grid"
+		model="com.axelor.app.prestashop.db.PrestashopConfiguration">
+		<toolbar>
+			<button title="Synchronization" name="sync"
+				onClick="com.axelor.controller.ConnectionToPrestashop:syncWithPrestashop" />
+		</toolbar>
+		<field name="apiKey" />
+		<field name="userName" />
+		<field name="active" />
+		<field name="tested" />
+	</grid>
+
+
+
+	<form cols="6" title="Configuration" name="prestashop-configuration-form"
+		onSave="com.axelor.controller.ConnectionToPrestashop:testConnection"
+		onNew="action-prestashop-record-in-current-user" model="com.axelor.app.prestashop.db.PrestashopConfiguration">
+		<toolbar>
+			<button hidden="true" title="Copy" name="copy" />
+<!-- 			<button title="Synchronization" name="sync" -->
+<!-- 				onClick="com.axelor.controller.ConnectionToPrestashop:syncWithPrestashop" /> -->
+		</toolbar>
+		<group title="Configuration" colSpan="5" cols="2">
+			<field name="apiKey"
+				onChange="com.axelor.controller.ConnectionToPrestashop:changeTested" />
+			<field name="prestashopUserInfo" hidden="true" />
+			<field name="userName" colSpan="2"
+				onChange="com.axelor.controller.ConnectionToPrestashop:changeTested"
+				readonly="true" />
+			<field name="active" title="Active?" colSpan="2"></field>
+			<field name="tested" title="Tested?" colSpan="2" readonly="true"></field>
+		</group>
+
+		<button title="Test Connection" name="test"
+			onClick="com.axelor.controller.ConnectionToPrestashop:testConnection" />
+
+	</form>
+
+	<action-record name="action-prestashop-record-in-current-user"
+		model="com.axelor.app.prestashop.db.PrestashopConfiguration">
+		<field name="prestashopUserInfo"
+			expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-record>
+	<!-- <action-record name="action-set-default" model="com.axelor.prestashop.db.Customer"> -->
+	<!-- <field name="websiteId" expr="1" /> -->
+	<!-- </action-record> -->
+
+</object-views>
+

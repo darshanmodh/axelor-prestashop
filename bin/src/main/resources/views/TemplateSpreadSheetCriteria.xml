@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="templateSpreadSheetCriteria-grid" title="Templates Files" model="com.axelor.apps.googleapps.db.TemplateSpreadSheetCriteria">
+		<field name="field"/>
+		<field name="operator"/>
+		<field name="value"/>
+	</grid>
+
+	<form name="templateSpreadSheetCriteria-form" title="Template File"
+		cols="2" colWidths="*,400" model="com.axelor.apps.googleapps.db.TemplateSpreadSheetCriteria">
+		<field name="field"/>
+		<field name="operator"/>
+		<field name="value"/>
+	</form>
+	
+</object-views>

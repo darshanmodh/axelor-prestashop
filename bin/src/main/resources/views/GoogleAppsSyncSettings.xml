@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+	
+	<grid name="googleapps-sync-settings-grid" title="Google Apps Sync Settings" editable="false" model="com.axelor.apps.googleapps.db.GoogleAppsSyncSettings">
+		<field name="filesModifiedWithin"/>
+		<field name="getSharedWithMeFiles"/>
+	</grid>
+
+	<selection name="googleAppsSyncSettings-selectModifiedWithin" >
+		<option value="1">1 Day</option>
+		<option value="2">2 Days</option>
+		<option value="5">5 Days</option>
+		<option value="7">1 Week</option>
+		<option value="14">2 Weeks</option>
+		<option value="28">4 Weeks</option>
+	</selection>
+
+	<form name="googleapps-sync-settings-form" title="Google Apps Sync Settings" cols="2" colWidths="*,300" 
+			onNew="action-googleappssyncsettings-record-set-driveuser-forsettings,action-googleappssyncsettings-method-check-sync-settings-on-new" model="com.axelor.apps.googleapps.db.GoogleAppsSyncSettings">
+		<toolbar>
+			<button name="syncWithSettings" title="Synchronize" onClick="action-googleappssyncsettings-method-synchronization" 
+				prompt=" &lt;img src='http://s10.postimg.org/iggyctyed/synchronize.png ' width='20px' &gt; &lt;/img&gt; It will Synchronize with Google Drive, Are You Sure ?"/>
+		</toolbar>
+		<group title="Google Apps Synchronization Settings" cols="2">
+			<field name="driveUserInfo" title="User"/>
+			<field name="filesModifiedWithin" selection="googleAppsSyncSettings-selectModifiedWithin" required="false"/>
+			<field name="getSharedWithMeFiles" required="false"/>
+		</group>
+	</form>
+	
+	<action-record name="action-googleappssyncsettings-record-set-driveuser-forsettings" model="com.axelor.apps.googleapps.db.GoogleAppsSyncSettings"  >
+		<field name="driveUserInfo" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()" />
+	</action-record>
+	
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-googleappssyncsettings-method-check-sync-settings-on-new">
+		<call class="com.axelor.googleapps.syncDrive.SynchronizeGoogleDriveControllerWithSettings" method="onNewCheckSyncSettings"/>
+	</action-method>
+	
+	<action-method name="action-googleappssyncsettings-method-synchronization">
+		<call class="com.axelor.googleapps.syncDrive.SynchronizeGoogleDriveControllerWithSettings" method="sychronization"/>
+	</action-method>
+	
+</object-views>

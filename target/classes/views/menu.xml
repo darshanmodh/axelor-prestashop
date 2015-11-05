@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<menuitem name="menu-prestashop" priority="12" title="Prestashop"
+		icon="img/prestashop.jpg" />
+
+	<menuitem name="menu-prestashop-customer" parent="menu-prestashop"
+		title="Customer" action="prestashop-customer-action" icon="img/16px/partnerSmall_16px.png" />
+	<menuitem name="menu-prestashop-address" parent="menu-prestashop"
+		title="Address" action="prestashop-address-action" icon="img/16px/addressBook_16px.png" />
+	<menuitem name="menu-ecommerce-prestashop-configuration"
+		parent="menu-prestashop" title="Configuration" action="prestashop-configuration-action"
+		icon="img/16px/parameterSmall_16px.png" />
+	<menuitem name="menu-prestashop-customer-group" parent="menu-prestashop"
+		title="Customer Group" action="prestashop-customer-group-action" icon="img/16px/organisationSmall_16px.png" />
+	<menuitem name="menu-prestashop-product" parent="menu-prestashop"
+		title="Prestashop Product" action="prestashop-product-action" icon="img/16px/productSmall_16px.png" />
+	<menuitem name="menu-prestashop-order" parent="menu-prestashop"
+		title="Prestashop Order" action="prestashop-order-action" icon="img/16px/orderSmall_16px.png" />
+	<menuitem name="menu-prestashop-chart" parent="menu-prestashop"
+		title="Prestashop Chart" action="prestashop-chart-action" icon="img/16px/reportSmall_16px.png" />
+
+	<action-view name="prestashop-customer-action" title="Partner"
+		model="com.axelor.apps.base.db.Partner">
+		<view type="grid" name="prestashop-customer-grid" />
+		<view type="form" name="prestashop-customer-form" />
+		<domain>self.prestashopid!=null</domain>
+	</action-view>
+	<action-view name="prestashop-address-action" title="Address"
+		model="com.axelor.apps.base.db.Address">
+		<view type="grid" name="prestashop-address-grid" />
+		<view type="form" name="prestashop-address-form" />
+		<domain>self.prestashopid!=null</domain>
+	</action-view>
+	<action-view name="prestashop-configuration-action" title="Configuration"
+		model="com.axelor.app.prestashop.db.PrestashopConfiguration">
+		<view type="grid" name="prestashop-configuration-grid" />
+		<view type="form" name="prestashop-configuration-form" />
+	</action-view>
+	<action-view name="prestashop-customer-group-action" title="Customer Group"
+		model="com.axelor.app.prestashop.db.PrestashopCustomerGroup">
+		<view type="grid" name="prestashop-customer-group-grid" />
+		<view type="form" name="prestashop-customer-group-form" />
+	</action-view>
+	<action-view name="prestashop-product-action" title="Prestashop Product"
+		model="com.axelor.apps.base.db.Product">
+		<view type="grid" name="prestashop-product-grid" />
+		<view type="form" name="prestashop-product-form" />
+		<domain>self.prestashopProductId!=null</domain>
+	</action-view>
+	<action-view name="prestashop-order-action" title="Prestashop Order"
+		model="com.axelor.apps.supplychain.db.SalesOrder">
+		<view type="grid" name="prestashop-sales-order-grid" />
+		<view type="form" name="prestashop-sales-order-form" />
+		<domain>self.prestashopOrderId!=null</domain>
+	</action-view>
+	<action-view name="prestashop-chart-action" title="Prestashop Chart">
+		<view type="portal" name="prestashop-chart-portal" />
+	</action-view>
+
+</object-views>

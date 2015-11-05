@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="file-permission-grid" title="File Sharing Permissions"
+		model="com.axelor.apps.googleapps.db.FilePermission" editable="true">
+		<toolbar>
+			<button name="refresh" title="Refresh"/>
+			<button name="search" title="Search"/>
+			<button name="delete" title="Delete" hidden="true"/>
+		</toolbar>
+		<field name="sharingUser" title="User"/>
+		<field name="shareToEmail" title="Email Address"/>
+		<field name="editable" title="Can Modify"/>
+	</grid>
+
+	<form name="file-permission-form" title="File Sharing Permissions"
+		cols="2" colWidths="*,200" model="com.axelor.apps.googleapps.db.FilePermission"
+		onNew="action-filepermission-record-googleFileParent-for-permission">
+		<field name="sharingUser" title="User" onChange="action-filepermission-record-setEmail-for-user"/>
+		<break/>
+		<field name="shareToEmail" title="Email Address" required="true"/>
+		<break/>
+		<label title="Pass Email Address for sharing other than ABS user."/>
+		<break/>
+		<field name="editable" title="Can Modify"/>
+		<break/>
+		<field name="notifyEmail" title="Send Email Notification"/>
+		<field name="googleFile" title="Google File" hidden="true"/>		
+	</form>
+
+	<action-record name="action-filepermission-record-setEmail-for-user" model="com.axelor.apps.googleapps.db.FilePermission">
+		<field name="shareToEmail" expr="eval: sharingUser.emailId"/>
+	</action-record>
+	
+	<action-record name="action-filepermission-record-googleFileParent-for-permission" model="com.axelor.apps.googleapps.db.FilePermission">
+		<field name="googleFile" expr="eval:_parent"/>
+	</action-record>
+	
+</object-views>

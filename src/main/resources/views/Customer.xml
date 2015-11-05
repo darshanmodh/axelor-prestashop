@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid title="PrestashopCustomer" name="prestashop-customer-grid" model="com.axelor.apps.base.db.Partner">
+		<field name="prestashopid" title="Prestashop ID" />
+		<field name="firstName" />
+		<field name="name" />
+		<field name="fullName" />
+		<field name="email" />
+		<field name="company" />
+		<field name="birthdate" title="Birthdate" />
+		<field name="prestashopCustomerGroup" title="Group ID"/>
+	</grid>
+
+
+	<form cols="6" title="Customer Information" name="prestashop-customer-form" onSave="save,com.axelor.controller.AddCustomerToPrestashop:saveToPrestashop" model="com.axelor.apps.base.db.Partner" onNew="action-password-attrs-disable-for-update">
+	 <toolbar>
+         <button name="copy" title="Copy" hidden="false" />
+         <button name="remove" title="Delete" hidden="false" onClick="com.axelor.controller.AddCustomerToPrestashop:deleteCustomer"/>
+    </toolbar>	
+		<group colSpan="6" title="Personal Information">
+			<field title="First Name" name="firstName" onChange="action-prestashop-customer-full-name" />
+			<field title="Last Name" name="name" onChange="action-prestashop-customer-full-name" />
+			<field title="Full Name" name="fullName" readonly="true"/>
+			<field title="Email" name="email" />			
+			<field title="Company" name="company" />
+			<field title="Password" name="password" widget="password" hidden="true"/>
+			<field title="Birthdate" name="birthdate" />
+			<field name="active" title="Active?" colSpan="2" max="1" min="0"/>
+			<field name="prestashopCustomerGroup" title="Group ID" canNew="false" canRemove="false" />
+			<field name="prestashopCustomerAddress" title="Address"  form-view="prestashop-address-form" />
+		</group>
+	</form>
+
+	<!-- <action-record name="action-set-default" model="com.axelor.prestashop.db.Customer"> -->
+	<!-- <field name="websiteId" expr="1" /> --> 
+	<!-- </action-record> -->
+	<action-attrs name="action-password-attrs-disable-for-update">
+    	<attribute name="hidden" for="password" expr="false"  />		
+	</action-attrs>
+	<action-record name="action-prestashop-customer-full-name" model="com.axelor.apps.base.db.Partner" >
+    	<field name="fullName" expr="eval: name + ' ' + firstName" if="name != null &amp;&amp; firstName != null"/>
+    	<field name="fullName" expr="eval: name" if="name != null &amp;&amp; firstName == null"/>
+    	<field name="fullName" expr="eval: firstName" if="firstName != null &amp;&amp; name == null"/>
+    </action-record>
+
+</object-views>
+

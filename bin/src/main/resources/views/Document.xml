@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid name="document-grid" title="Documents" model="com.axelor.apps.googleapps.db.GoogleFile" editable="false">
+		<toolbar>
+			<button name="refresh" title="Refresh"/>
+			<button name="search" title="Search"/>
+			<button name="delete" title="Delete" hidden="true"/>
+			<button name="downloadFile" title="Download" help="select the file to download and then click here"
+				onClick="action-document-method-download-file-from-grid"/>
+			<button name="openInDrive" title="Open" help="Opens the document in Drive view"
+				onClick="action-document-method-read-document-in-drive-from-grid"/>
+			<button name="trash" title="Move To Trash" prompt="It will move selected file(s) to trash, Are You Sure ?" 
+				onClick="action-document-method-trash-documents-from-grid"/>
+			<button name="deleteFiles" title="Delete" prompt="It will remove selected file(s) permanently, Are You Sure ?" 
+				onClick="action-document-method-delete-files-from-grid"/>
+		</toolbar>
+
+		<field name="fileName" title="File Name"/>
+		<field name="fileSize" title="File Size"/>
+		<field name="googleDirectory" title="Directory"/>
+		<field name="lastModified" title="Last Modified"/>
+		<field name="filePermissionsList" title="Shared To">
+		</field>
+	</grid>
+
+	<selection name="docTypeSelection">
+		<option value="application/vnd.google-apps.document">Google Document</option>
+		<option value="text/plain">.txt</option>
+		<option value="application/vnd.oasis.opendocument.text">.odt</option>
+		<option value="application/msword">.docx</option>
+		<option value="application/pdf">.pdf</option>
+		<option value="text/csv">.csv</option>
+	</selection>
+
+	<form colWidths="*,300,300" cols="3" title="Google Document" name="document-form"
+		model="com.axelor.apps.googleapps.db.GoogleFile"
+		onNew="action-document-attrs-enable-fill-type-on-new,action-document-record-current-user-for-directory,action-document-method-check-root-existance"
+		onSave="action-document-method-save-document-file"
+		onLoad="action-document-attrs-disable-fill-type-on-load,action-document-attrs-directory-forshared,action-document-method-check-sharing-list,action-document-attrs-disable-export-pdf">
+		<toolbar>
+			<button title="Cancel" name="cancel"/>
+			<button hidden="true" title="Copy" name="copy"/>
+			<button hidden="true" title="Refresh" name="refresh"/>
+			<button title="Search" name="search"/>
+			<button name="downloadFile" title="Download"
+				onClick="action-document-method-download-file"/>
+			<button name="openDocumentinDrive" title="Open"
+				onClick="action-document-method-read-document-in-drive"/>
+		</toolbar>
+		<group colSpan="2" cols="2" help="this section is required to select a file with which you want to make perform operation"
+			title="Google Document">
+			<break />
+			<field name="driveUserInfo" hidden="true"/>
+			<break />
+				<group canCollapse="true" colSpan="2" title="Document File Details">
+					<field title="File Name" name="fileName" required="true"/>
+					<field name="fileType" selection="docTypeSelection" required="true" onChange="action-document-attrs-hide-create-in-drive"/>
+					<field name="googleDirectory" title="Directory"	 domain="self.driveUserInfo = :driveUserInfo">
+						<grid title="Directory Selection">
+							<field name="directoryName" title="Directory Name"/>
+						</grid>
+					</field>
+				</group>
+				<break />
+				<group title="Create Document in Drive View" cols="4" colWidths="80,80,50,*" name="groupCreateInDrive" canCollapse="false">
+					<field name="check_create_file_in_drive" title="Use Drive" widget="[type=BOOLEAN]" onChange="action-document-attrs-showhide-editor"/>
+					<button name="btnOpenDrive" title="&lt;font color='#228B22' &gt; &lt;b&gt;Create In Drive&lt;/b&gt; &lt;/font&gt;" prompt="Do you want to Create Document in Google Drive View ?" 
+						onClick="action-document-method-create-document-in-drive"/>
+       			</group>
+				<break/>
+				<group colSpan="2" cols="2" name="group_doc_editor" title="Document Editor">
+					<field colSpan="2" title="Document Content" name="fileContent"/>
+				</group>
+				<group title="Sharing Permissions" colSpan="2">
+					<field name="filePermissionsList" colSpan="2"/>
+				</group>
+			</group>
+			<group title="Actions" canCollapse="true">
+				<button name="exportDocumentPdf" title="Export Pdf" prompt="It will export this document file in PDF format, Continue ?"
+					onClick="action-document-method-export-in-pdf"/><break/>
+				<button name="btndownloadFile" title="Download"
+					onClick="action-document-method-download-file"/><break/>
+				<button name="btnOpenDocumentinDrive" title="Open" prompt="Want to Open the document in Drive view ?"
+					onClick="action-document-method-read-document-in-drive"/>
+			</group>
+		<break/>
+	</form>
+
+	<action-record name="action-document-record-current-user-for-directory" model="com.axelor.apps.googleapps.db.GoogleFile">
+		<field name="driveUserInfo" expr="call:com.axelor.apps.base.service.user.UserInfoService:getUserInfo()"/>
+	</action-record>
+	
+	<action-attrs name="action-document-attrs-disable-fill-type-on-load">
+		<attribute name="readonly" for="fileType" expr="true" />
+		<attribute name="hidden" for="downloadFile" expr="false"/>
+		<attribute name="hidden" for="openDocumentinDrive" expr="false"/>		
+		<attribute name="hidden" for="groupCreateInDrive" expr="true"/>
+		<attribute name="hidden" for="group_doc_editor" expr="true"/>
+		<attribute name="required" for="fileContent" expr="false"/>
+	</action-attrs>
+	
+	<action-attrs name="action-document-attrs-enable-fill-type-on-new">
+		<attribute name="readonly" for="fileType" expr="false" />
+		<attribute name="hidden" for="downloadFile" expr="true"/>
+		<attribute name="hidden" for="openDocumentinDrive" expr="true"/>
+		<attribute name="hidden" for="groupCreateInDrive" expr="false"/>
+		<attribute name="hidden" for="group_doc_editor" expr="false"/>
+		<attribute name="required" for="fileContent" expr="true"/>
+	</action-attrs>
+	
+	<action-attrs name="action-document-attrs-disable-export-pdf">
+		<attribute name="hidden" for="exportDocumentPdf" expr="eval: fileType != 'application/vnd.google-apps.document'" />
+		<attribute name="hidden" for="exportDocumentPdf" expr="eval: fileType == 'text/csv'" />
+	</action-attrs>
+	
+	<action-attrs name="action-document-attrs-showhide-editor">
+		<attribute name="hidden" for="group_doc_editor" expr="eval: check_create_file_in_drive"/>
+		<attribute name="required" for="fileContent" expr="eval: !check_create_file_in_drive"/>
+	</action-attrs>
+	
+	<action-attrs name="action-document-attrs-hide-create-in-drive">
+		<attribute name="hidden" for="groupCreateInDrive" expr="eval: fileType != 'application/vnd.google-apps.document' " />
+	</action-attrs>
+	
+	<action-attrs name="action-document-attrs-directory-forshared">
+		<attribute name="readonly" for="googleDirectory" expr="true" if="googleDirectory == null" />
+		<attribute name="readonly" for="googleDirectory" expr="false" if="googleDirectory != null" />
+	</action-attrs>
+		
+	<!-- ACTION METHOD -->
+	
+	<action-method name="action-document-method-download-file-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="downloadFileFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-document-method-read-document-in-drive-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="readDocumentInDriveFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-document-method-trash-documents-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="trashDocumentsFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-document-method-delete-files-from-grid">
+		<call class="com.axelor.googleapps.document.DocumentController" method="deleteFilesFromGrid"/>
+	</action-method>
+	
+	<action-method name="action-document-method-save-document-file">
+		<call class="com.axelor.googleapps.document.DocumentController" method="saveDocumentFile"/>
+	</action-method>
+	
+	<action-method name="action-document-method-check-root-existance">
+		<call class="com.axelor.googleapps.document.DocumentController" method="onNewCheckRootExistance"/>
+	</action-method>
+	
+	<action-method name="action-document-method-check-sharing-list">
+		<call class="com.axelor.googleapps.document.DocumentController" method="checkSharingList"/>
+	</action-method>
+	
+	<action-method name="action-document-method-download-file">
+		<call class="com.axelor.googleapps.document.DocumentController" method="downloadFile"/>
+	</action-method>
+	
+	<action-method name="action-document-method-read-document-in-drive">
+		<call class="com.axelor.googleapps.document.DocumentController" method="readDocumentInDrive"/>
+	</action-method>
+	
+	<action-method name="action-document-method-create-document-in-drive">
+		<call class="com.axelor.googleapps.document.DocumentController" method="createDocumentInDrive"/>
+	</action-method>
+	
+	<action-method name="action-document-method-export-in-pdf">
+		<call class="com.axelor.googleapps.document.DocumentController" method="exportFileInPdf"/>
+	</action-method>
+	
+</object-views>

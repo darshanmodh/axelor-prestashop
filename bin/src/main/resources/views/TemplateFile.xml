@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<form name="templateFile-form" title="Document Template" cols="2" colWidths="*,400" 
+		model="com.axelor.apps.googleapps.db.TemplateFile" onLoad="action-templatefile-attrs-disable-shareForOther,action-templatefile-method-current-user-for-templatefile" 
+		onNew="action-templatefile-method-current-user-for-templatefile">
+		<break/>
+		<group title="Document Template" cols="2">
+			<field name="dummy3" widget="MasterDetail[type=MANY_TO_ONE|target=com.axelor.auth.db.User|targetName=name]" title="M2O Field" hidden="true"/>
+			<field name="googleFile" title="Template Google File" required="true"  domain="self.driveUserInfo.internalUser=:dummy3 and self.fileType='application/vnd.google-apps.document'"/>					
+			<field name="share" title="Share" help="Enable This Template Share To Other Users"/><break/>
+			<field name="dataModel" required="true"/><break/>
+		</group>
+	</form>
+	
+	<grid name="templateFile-grid" editable="false" title="Document Template Files" model="com.axelor.apps.googleapps.db.TemplateFile">
+		<field name="googleFile" title="Template Google File"/>
+		<field name="share"  title="Share"/>		
+		<field name="dataModel" title="Data Model"/>
+	</grid>
+	
+	<action-attrs name="action-templatefile-attrs-disable-shareForOther">
+		<attribute name="readonly" for="share" expr="true" if="googleFile.driveUserInfo.internalUser != __user__"  />
+		<attribute name="readonly" for="share" expr="false" if="googleFile.driveUserInfo.internalUser == __user__"  />
+	</action-attrs>	
+	
+	<!-- ACTION METHOD -->
+		
+	<action-method name="action-templatefile-method-current-user-for-templatefile">
+		<call class="com.axelor.googleapps.document.DocumentController" method="getCurrentUser"/>
+	</action-method>
+	
+	<action-method name="action-templatefile-method-call-save-methods">
+		<call class="com.axelor.googleapps.document.DocumentController" method="createDocumentAsTemplate"/>
+	</action-method>
+	
+</object-views>

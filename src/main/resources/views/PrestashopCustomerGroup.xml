@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<object-views xmlns="http://apps.axelor.com/xml/ns/object-views"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://apps.axelor.com/xml/ns/object-views http://apps.axelor.com/xml/ns/object-views/object-views_0.9.xsd">
+
+	<grid title="Prestashop Customer Group" name="prestashop-customer-group-grid" model="com.axelor.app.prestashop.db.PrestashopCustomerGroup">
+			<field name="name" title="Group Name" />
+			<field name="description" title="Group Description" />
+			<field name="id_group" title="Group ID" />	
+			<field name="customer">
+				<grid title="Employee List">
+					<field name="prestashopid" title="Prestashop ID" />
+					<field name="firstname" />
+					<field name="lastname" />
+					<field name="email" />
+					<field name="company" />
+					<field name="birthday" title="Birthday" />
+					<field name="id_group" />
+				</grid>
+				<form title="Employee">
+					<field title="First Name" name="firstname" />
+					<field title="Last Name" name="lastname" />
+					<field title="Email" name="email" />
+					<field title="Company" name="company" />
+					<field title="Password" name="passwd" widget="password"/>
+					<field title="Birthday" name="birthday" />
+					<field name="active" title="Active?" colSpan="2" max="1" min="0"/>
+					<field name="deleted" title="Deleted?" colSpan="2" max="1" min="0" />
+					<field name="id_group" />
+				</form>
+			</field>		
+	</grid>
+
+
+	<form cols="6" title="Prestashop Customer Group" name="prestashop-customer-group-form" model="com.axelor.app.prestashop.db.PrestashopCustomerGroup">
+		<group colSpan="6" title="Prestashop">
+			<field name="name" />
+			<field name="description" />
+			<field name="id_group" />
+		</group>
+	</form>
+
+	<!-- <action-record name="action-set-default" model="com.axelor.prestashop.db.Customer"> -->
+	<!-- <field name="websiteId" expr="1" /> --> 
+	<!-- </action-record> -->
+
+</object-views>
+
